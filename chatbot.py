@@ -1,7 +1,10 @@
-from ctypes.wintypes import PDWORD
+import os
 from wolframalpha import Client
+from decouple import config
 
-client = Client('PQKR53-4VJTP72EUK') # API Key
+API_KEY = config('KEY')
+
+client = Client(API_KEY) # API Key
 
 question = input("What is your question?")
 
