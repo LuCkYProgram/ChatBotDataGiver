@@ -9,6 +9,9 @@ client = Client(API_KEY) # API Key
 
 #Text to Speech
 engine = pyttsx3.init()
+voices = engine.getProperty("voices")
+voice_id_to_use = voices[1].id
+engine.setProperty("voice", voice_id_to_use)
 engine.setProperty("rate", 200)
 engine.say("What is your question?")
 engine.runAndWait()
