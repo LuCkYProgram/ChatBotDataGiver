@@ -29,13 +29,20 @@ print("You said: " + question)
 
 #Search Engine Section
 #question = input("What is your question?")
-response = client.query(question)
-pod = next(response.results)
-answer = pod.text
+if question == "covid-19":
+    answer = "Here is the most updated website by John Hopkins."
+    print(answer)
+    engine.say(answer)
+    engine.runAndWait()
+    print("https://coronavirus.jhu.edu/map.html")
+else:
+    response = client.query(question)
+    pod = next(response.results)
+    answer = pod.text
+    #Text to Speech
+    print("Your question: {}".format(question))
+    engine.say(answer)
+    engine.runAndWait()
+    print("Answer: {}".format(answer))
 
-#Text to Speech
-print("Your question: {}".format(question))
-engine.say(answer)
-engine.runAndWait()
-print("Answer: {}".format(answer))
 
