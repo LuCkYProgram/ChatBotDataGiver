@@ -1,0 +1,7 @@
+wolframalpha==5.0.0
+pyttsx3==2.90
+python-decouple==3.6
+PyAudio==0.2.11
+speech_recognition==3.8.1
+beautifulsoup4==4.11.1
+google==3.0.0
