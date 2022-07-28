@@ -10,6 +10,10 @@ from googlesearch import search
 import requests
 from bs4 import BeautifulSoup
 
+# import pandas as pd
+
+# df = pd.read_csv('https://store.pangaea.de/Publications/IizumiT_2019/gdhy_v1.2_v1.3_20190128.zip')
+
 API_KEY = config('KEY')
 client = Client(API_KEY) # API Key
 
@@ -43,7 +47,7 @@ print("You said: " + choice)
 #     engine.runAndWait()
 #     print("https://coronavirus.jhu.edu/map.html")
 
-def data_google(data):
+def google_search(data):
     dataset = data
     dataset_clean = dataset.replace(' ', '+').lower()
     link = f'https://datasetsearch.research.google.com/search?query={dataset_clean}'
@@ -59,6 +63,54 @@ def data_google(data):
         name_clean = str(name[i]).split('">')[1].split('</')[0]
         site_clean = str(site[i]).split('">')[1].split('<')[0]
     print(f'\n{name_clean}\n Dataset source: {site_clean}\n')
+
+def awesome_search(data):
+    name_selec = []
+    link_selec = []
+
+    link = 'https://github.com/awesomedata/awesome-public-datasets'
+    req = requests.get(link)
+    soup = BeautifulSoup(req.content, 'html.parser')
+    html = soup.find_all('a', rel="nofollow")
+    print('\n\n-------------------- DATASETS FOUND IN AWESOME PUBLIC DATASETS\n\n')
+
+    for i in range(len(html))[8:]:
+        name = (str(html[i]).strip('</a>').split('w">')[1]).lower()
+        link = str(html[i]).split('f="')[1].split('" r')[0]
+        if (data in name):
+            name_selec.append(name)
+            link_selec.append(link)
+        else:
+            name_selec += ''
+            link_selec += ''
+    for j in range(len(name_selec)):
+        if len(name_selec) < 1:
+            print('Datasets not found')
+        else:
+            print(f'\n{name_selec[j]}\n{link_selec[j]}\n')
+
+def uci_search(data):
+    dataset = data
+    dataset_clean = dataset.replace(' ', '+').lower()
+
+    link = f'https://archive.ics.uci.edu/ml/datasets/{dataset_clean}'
+    req = requests.get(link)
+    soup = BeautifulSoup(req.content, 'html.parser')
+
+    dataset_html = soup.find_all('span', class_='heading')
+    table = soup.find_all('td')
+    warning = soup.find_all('p')
+    print('\n\n-------------------- DATASETS FOUND IN UCI\n\n')
+    try:
+        name = str(dataset_html).split('b>')[1].split('</')[0]
+        charac = str(table).split('"normal">')[46].split('</p>')[0]
+    except IndexError:
+        name = ''
+        charac = ''
+        link = ''
+        print('')
+
+    print(f'\n{name} ({link})\n{charac}')
 
 def listening_replying_function(to_ask):
     engine.say(to_ask)
@@ -91,6 +143,8 @@ elif choice == "math":
     print("Answer: {}".format(answer))
 elif choice == "dataset":
     key_word = listening_replying_function("What dataset do you want to find?")
-    data_google(key_word)
+    google_search(key_word)
+    uci_search(key_word)
+    awesome_search(key_word)
 
 
