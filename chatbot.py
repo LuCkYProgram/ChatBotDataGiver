@@ -1,4 +1,5 @@
 from logging.config import listen
+from operator import is_
 import os
 from decouple import config
 
@@ -13,6 +14,17 @@ from bs4 import BeautifulSoup
 # import pandas as pd
 
 # df = pd.read_csv('https://store.pangaea.de/Publications/IizumiT_2019/gdhy_v1.2_v1.3_20190128.zip')
+# import urllib
+# from os.path import splitext, basename
+
+from urllib.request import urlopen
+
+def file_ext(url):
+    site = urlopen(url)
+    meta = site.info()  # get header of the http request
+    filetype = meta["content-type"]
+    filetype = filetype.split(';', 1)[0]
+    return filetype.rsplit('/', 1)[-1]
 
 API_KEY = config('KEY')
 client = Client(API_KEY) # API Key
