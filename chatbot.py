@@ -12,6 +12,7 @@ import requests
 from bs4 import BeautifulSoup
 
 import pandas as pd
+from matplotlib import pyplot as plt
 
 from urllib.request import urlopen
 
@@ -133,6 +134,44 @@ def listening_replying_function(to_ask):
     engine.runAndWait()
     return result
 
+
+def stat_analysis(section,df):
+    var = df[section]
+
+    # Get statistics
+    min_val = var.min()
+    max_val = var.max()
+    mean_val = var.mean()
+    med_val = var.median()
+    mod_val = var.mode()[0]
+
+    print('Minimum:{:.2f}\nMean:{:.2f}\nMedian:{:.2f}\nMode:{:.2f}\nMaximum:{:.2f}\n'.format(min_val,
+                                                                                            mean_val,
+                                                                                            med_val,
+                                                                                            mod_val,
+                                                                                            max_val))
+
+    # Create a Figure
+    fig = plt.figure(figsize=(10,4))
+
+    # Plot a histogram
+    plt.hist(var)
+
+    # Add lines for the statistics
+    plt.axvline(x=min_val, color = 'gray', linestyle='dashed', linewidth = 2)
+    plt.axvline(x=mean_val, color = 'cyan', linestyle='dashed', linewidth = 2)
+    plt.axvline(x=med_val, color = 'red', linestyle='dashed', linewidth = 2)
+    plt.axvline(x=mod_val, color = 'yellow', linestyle='dashed', linewidth = 2)
+    plt.axvline(x=max_val, color = 'gray', linestyle='dashed', linewidth = 2)
+
+    # Add titles and labels
+    plt.title('Data Distribution')
+    plt.xlabel('Value')
+    plt.ylabel('Frequency')
+
+    # Show the figure
+    fig.show()
+
 if choice == "Google":
     query = listening_replying_function("What is your query?")
     engine.say("Here is your top 10 results of your query based by Google.")
@@ -160,8 +199,10 @@ elif choice == "dataset":
     file_type = file_ext(data_url)
     try:
         df = pd.read_csv(data_url)
-        df.head()
     except:
         print("This program does not support " + file_type + " file extension type.")
-    
+        exit()
+    df.head()
+    column = input("column name: ")
+    stat_analysis(column,df)
 
