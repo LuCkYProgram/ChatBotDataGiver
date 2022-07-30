@@ -11,11 +11,7 @@ from googlesearch import search
 import requests
 from bs4 import BeautifulSoup
 
-# import pandas as pd
-
-# df = pd.read_csv('https://store.pangaea.de/Publications/IizumiT_2019/gdhy_v1.2_v1.3_20190128.zip')
-# import urllib
-# from os.path import splitext, basename
+import pandas as pd
 
 from urllib.request import urlopen
 
@@ -157,6 +153,15 @@ elif choice == "dataset":
     key_word = listening_replying_function("What dataset do you want to find?")
     google_search(key_word)
     uci_search(key_word)
-    awesome_search(key_word)
-
+    # awesome_search(key_word)
+    engine.say("Please copy and paste the link needing to be used format into a data set.")
+    engine.runAndWait()
+    data_url = input("URL: ")
+    file_type = file_ext(data_url)
+    try:
+        df = pd.read_csv(data_url)
+        df.head()
+    except:
+        print("This program does not support " + file_type + " file extension type.")
+    
 
