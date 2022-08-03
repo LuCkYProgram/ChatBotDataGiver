@@ -1,18 +1,22 @@
+#config modules
 from logging.config import listen
 from operator import is_
 import os
 from decouple import config
-
+#speech to text to speech modules
 import pyttsx3
 import speech_recognition
-
+#searches modules
 from wolframalpha import Client
 from googlesearch import search
 import requests
 from bs4 import BeautifulSoup
-
+#data science / modeling modules
 import pandas as pd
 from matplotlib import pyplot as plt
+import numpy as np
+
+
 
 from urllib.request import urlopen
 
@@ -171,6 +175,21 @@ def stat_analysis(section,df):
 
     # Show the figure
     fig.show()
+    
+def split_data(df):
+    columns = list(df)
+    for i, s in enumerate(columns):
+        columns[i] = columns[i].strip()
+        columns[i] = columns[i].strip('"')
+    label = input("Select model label: ")
+    label_index = columns.index(label)
+    features = list(df)
+    labels = features.pop(label_index)
+    from sklearn.model_selection import train_test_split
+    X, y = df[features].values, df[labels].values
+    # Split data 70%-30% into training set and test set
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=0)
+    print ('Training Set: %d rows\nTest Set: %d rows' % (X_train.shape[0], X_test.shape[0]))
 
 if choice == "Google":
     query = listening_replying_function("What is your query?")
@@ -205,4 +224,5 @@ elif choice == "dataset":
     df.head()
     column = input("column name: ")
     stat_analysis(column,df)
+    input("Is this a Regression, Classification, Clustering, or Deep Learning Model?")
 
