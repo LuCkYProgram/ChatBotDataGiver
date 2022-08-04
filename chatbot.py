@@ -187,9 +187,32 @@ def split_data(df):
     labels = features.pop(label_index)
     from sklearn.model_selection import train_test_split
     X, y = df[features].values, df[labels].values
+    print('Features:',X[:10], '\nLabels:', y[:10], sep='\n')
     # Split data 70%-30% into training set and test set
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=0)
     print ('Training Set: %d rows\nTest Set: %d rows' % (X_train.shape[0], X_test.shape[0]))
+    return(X_train, X_test, y_train, y_test)
+
+def train_regression(X_train, y_train):
+    from sklearn.linear_model import LinearRegression
+    model = LinearRegression().fit(X_train, y_train)
+    print (model)
+    return model
+
+def evaluation_of_regression(model, X_test, y_test):
+    predictions = model.predict(X_test)
+    np.set_printoptions(suppress=True)
+    print('Predicted labels: ', np.round(predictions)[:10])
+    print('Actual labels   : ' ,y_test[:10])
+    plt.scatter(y_test, predictions)
+    plt.xlabel('Actual Labels')
+    plt.ylabel('Predicted Labels')
+    plt.title('Daily Bike Share Predictions')
+    z = np.polyfit(y_test, predictions, 1)
+    p = np.poly1d(z)
+    plt.plot(y_test,p(y_test), color='magenta')
+    plt.show()
+
 
 if choice == "Google":
     query = listening_replying_function("What is your query?")
@@ -224,5 +247,8 @@ elif choice == "dataset":
     df.head()
     column = input("column name: ")
     stat_analysis(column,df)
-    input("Is this a Regression, Classification, Clustering, or Deep Learning Model?")
+    model_type = input("Is this a Regression, Classification, Clustering, or Deep Learning Model?")
+    X_train, X_test, y_train, y_test = split_data(df)
+    model = train_regression(X_train, y_train)
+    evaluation_of_regression(model, X_test, y_test)
 
