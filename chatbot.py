@@ -1,3 +1,4 @@
+from models import *
 #config modules
 from logging.config import listen
 from operator import is_
@@ -191,28 +192,13 @@ def split_data(df):
     # Split data 70%-30% into training set and test set
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=0)
     print ('Training Set: %d rows\nTest Set: %d rows' % (X_train.shape[0], X_test.shape[0]))
-    return(X_train, X_test, y_train, y_test)
+    return(X_train, X_test, y_train, y_test, features, labels)
 
-def train_regression(X_train, y_train):
-    from sklearn.linear_model import LinearRegression
-    model = LinearRegression().fit(X_train, y_train)
-    print (model)
-    return model
-
-def evaluation_of_regression(model, X_test, y_test):
-    predictions = model.predict(X_test)
-    np.set_printoptions(suppress=True)
-    print('Predicted labels: ', np.round(predictions)[:10])
-    print('Actual labels   : ' ,y_test[:10])
-    plt.scatter(y_test, predictions)
-    plt.xlabel('Actual Labels')
-    plt.ylabel('Predicted Labels')
-    plt.title('Daily Bike Share Predictions')
-    z = np.polyfit(y_test, predictions, 1)
-    p = np.poly1d(z)
-    plt.plot(y_test,p(y_test), color='magenta')
+def feature_distributions(df,features,labels):
+    for col in features:
+        df.boxplot(column=col, by=labels, figsize=(6,6))
+        plt.title(col)
     plt.show()
-
 
 if choice == "Google":
     query = listening_replying_function("What is your query?")
@@ -248,7 +234,16 @@ elif choice == "dataset":
     column = input("column name: ")
     stat_analysis(column,df)
     model_type = input("Is this a Regression, Classification, Clustering, or Deep Learning Model?")
-    X_train, X_test, y_train, y_test = split_data(df)
-    model = train_regression(X_train, y_train)
-    evaluation_of_regression(model, X_test, y_test)
+    if model_type == "Regression":
+        X_train, X_test, y_train, y_test = split_data(df)
+        model = train_regression(X_train, y_train)
+        evaluation_of_regression(model, X_test, y_test)
+    elif model_type == "Classification":
+        bin_or_multi = input("Binary or Multi?")
+        if bin_or_multi == "Binary":
+            X_train, X_test, y_train, y_test = split_data(df)
+            model = train_binary_classification(X_train, y_train)
+            evaluation_of_binary_classification(model, X_test, y_test)
+        else:
+            print("to do")
 
