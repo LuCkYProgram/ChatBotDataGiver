@@ -178,6 +178,7 @@ def stat_analysis(section,df):
     fig.show()
     
 def split_data(df):
+    df = df.dropna()
     columns = list(df)
     for i, s in enumerate(columns):
         columns[i] = columns[i].strip()
@@ -245,5 +246,8 @@ elif choice == "dataset":
             model = train_binary_classification(X_train, y_train)
             evaluation_of_binary_classification(model, X_test, y_test)
         else:
-            print("to do")
+            X_train, X_test, y_train, y_test = split_data(df)
+            model = train_multi_classification(X_train, y_train)
+            evaluation_of_multi_classification(model, X_test, y_test)
+            
 

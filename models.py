@@ -22,7 +22,7 @@ def evaluation_of_regression(model, X_test, y_test):
     plt.plot(y_test,p(y_test), color='magenta')
     plt.show()
     
-def train_binary_classification(model, X_train, y_train):
+def train_binary_classification(X_train, y_train):
     from sklearn.linear_model import LogisticRegression
     reg = 0.01
     model = LogisticRegression(C=1/reg, solver="liblinear").fit(X_train, y_train)
@@ -35,3 +35,18 @@ def evaluation_of_binary_classification(model, X_test, y_test):
     print('Actual labels:    ' ,y_test)
     from sklearn.metrics import accuracy_score
     print('Accuracy: ', accuracy_score(y_test, predictions))
+    
+def train_multi_classification(X_train, y_train):
+    from sklearn.linear_model import LogisticRegression
+    reg = 0.1
+    multi_model = LogisticRegression(C=1/reg, solver='lbfgs', multi_class='auto', max_iter=10000).fit(X_train, y_train)
+    print (multi_model)
+    return(multi_model)
+
+def evaluation_of_multi_classification(multi_model, X_test, y_test):
+    multi_model = multi_model.predict(X_test)
+    print('Predicted labels: ', multi_model[:15])
+    print('Actual labels   : ' ,y_test[:15])
+    
+def classification_report():
+    print("to do")
