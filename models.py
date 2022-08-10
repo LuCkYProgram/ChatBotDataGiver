@@ -93,3 +93,28 @@ def ROC_curve(multi_model, classes, X_test, y_test):
     plt.show()
     auc = roc_auc_score(y_test, probability_scores, multi_class='ovr')
     print('Average AUC:', auc)
+    
+def clustering_prep(df):
+    #add custom feature addin
+    features = df[df.columns[0:6]]
+    features.sample(10)
+    from sklearn.preprocessing import MinMaxScaler
+    from sklearn.decomposition import PCA
+    scaled_features = MinMaxScaler().fit_transform(features[df.columns[0:6]])
+    pca = PCA(n_components=2).fit(scaled_features)
+    features_2d = pca.transform(scaled_features)
+    features_2d[0:10]
+    return features
+
+def k_means_clustering(features):
+    from sklearn.cluster import KMeans
+    wcss = []
+    for i in range(1, 11):
+        kmeans = KMeans(n_clusters = i)
+        kmeans.fit(features.values)
+        wcss.append(kmeans.inertia_)
+    plt.plot(range(1, 11), wcss)
+    plt.title('WCSS by Clusters')
+    plt.xlabel('Number of clusters')
+    plt.ylabel('WCSS')
+    plt.show()
