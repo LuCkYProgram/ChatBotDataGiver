@@ -81,11 +81,11 @@ def ROC_curve(multi_model, classes, X_test, y_test):
     thresh ={}
     for i in range(len(classes)):    
         fpr[i], tpr[i], thresh[i] = roc_curve(y_test, probability_scores[:,i], pos_label=i)
-    ### (fix)
-    plt.plot(fpr[0], tpr[0], linestyle='--',color='orange', label=penguin_classes[0] + ' vs Rest')
-    plt.plot(fpr[1], tpr[1], linestyle='--',color='green', label=penguin_classes[1] + ' vs Rest')
-    plt.plot(fpr[2], tpr[2], linestyle='--',color='blue', label=penguin_classes[2] + ' vs Rest')
-    ###
+        plt.plot(fpr[i], tpr[i], linestyle='--', label=classes[i] + ' vs Rest')
+    ### 
+    # plt.plot(fpr[0], tpr[0], linestyle='--',color='orange', label=penguin_classes[0] + ' vs Rest')
+    # plt.plot(fpr[1], tpr[1], linestyle='--',color='green', label=penguin_classes[1] + ' vs Rest')
+    # plt.plot(fpr[2], tpr[2], linestyle='--',color='blue', label=penguin_classes[2] + ' vs Rest')
     plt.title('Multiclass ROC curve')
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive rate')
