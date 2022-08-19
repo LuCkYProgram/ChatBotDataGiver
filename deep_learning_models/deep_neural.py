@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.utils.data as td
-
+from matplotlib import pyplot as plt
 # Set random seed for reproducability
 torch.manual_seed(0)
 
@@ -125,3 +125,35 @@ for epoch in range(1, epochs + 1):
     epoch_nums.append(epoch)
     training_loss.append(train_loss)
     validation_loss.append(test_loss)
+    
+plt.plot(epoch_nums, training_loss)
+plt.plot(epoch_nums, validation_loss)
+plt.xlabel('epoch')
+plt.ylabel('loss')
+plt.legend(['training', 'validation'], loc='upper right')
+plt.show()
+
+for param_tensor in model.state_dict():
+    print(param_tensor, "\n", model.state_dict()[param_tensor].numpy())
+    
+#Pytorch doesn't have a built-in confusion matrix metric, so we'll use SciKit-Learn
+from sklearn.metrics import confusion_matrix
+import numpy as np
+
+# Set the model to evaluate mode
+model.eval()
+
+# Get predictions for the test data
+x = torch.Tensor(x_test).float()
+_, predicted = torch.max(model(x).data, 1)
+
+# Plot the confusion matrix
+cm = confusion_matrix(y_test, predicted.numpy())
+plt.imshow(cm, interpolation="nearest", cmap=plt.cm.Blues)
+plt.colorbar()
+tick_marks = np.arange(len(penguin_classes))
+plt.xticks(tick_marks, penguin_classes, rotation=45)
+plt.yticks(tick_marks, penguin_classes)
+plt.xlabel("Predicted Species")
+plt.ylabel("Actual Species")
+plt.show()
