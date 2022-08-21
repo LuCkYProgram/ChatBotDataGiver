@@ -157,3 +157,26 @@ plt.yticks(tick_marks, penguin_classes)
 plt.xlabel("Predicted Species")
 plt.ylabel("Actual Species")
 plt.show()
+
+# Save the model weights
+model_file = 'models/penguin_classifier.pt'
+torch.save(model.state_dict(), model_file)
+del model
+print('model saved as', model_file)
+
+# New penguin features
+x_new = [[50.4,15.3,20,50]]
+print ('New sample: {}'.format(x_new))
+
+# Create a new model class and load weights
+model = PenguinNet()
+model.load_state_dict(torch.load(model_file))
+
+# Set model to evaluation mode
+model.eval()
+
+# Get a prediction for the new data sample
+x = torch.Tensor(x_new).float()
+_, predicted = torch.max(model(x).data, 1)
+
+print('Prediction:',penguin_classes[predicted.item()])
